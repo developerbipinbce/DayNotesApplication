@@ -1,0 +1,179 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: NoteForADayAssignment
+#host: localhost:8442
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /DayNotes/CreateDayNotes:
+    x-swagger-router-controller: "dayNotes"
+    post:
+      tags:
+      - "DayNotes"
+      operationId: createDayNotes      
+      parameters:
+      - in: "body"
+        name: body
+        required: true
+        schema:
+          $ref: "#/definitions/createDayNotesBody"      
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/DailyNotesResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /DayNotes/GetListDayNotes:
+    x-swagger-router-controller: dayNotes
+    get:
+      tags:
+      - "DayNotes"
+      operationId: getListDayNotes              
+      responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/DailyNotesResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /DayNotes/DeleteDayNotes:
+    x-swagger-router-controller: dayNotes
+    delete:
+      tags:
+      - "DayNotes"
+      operationId: deleteDayNotesByCode      
+      parameters:
+        - in: query
+          name: code
+          description: provide day notes code
+          required: true
+          type: string        
+      responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/DailyNotesResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /DayNotes/GetDayNotesByCode:
+    x-swagger-router-controller: dayNotes
+    get:
+      tags:
+      - "DayNotes"
+      operationId: getDayNotesByCode            
+      parameters:
+        - in: query
+          name: code
+          description: provide day notes code
+          required: true
+          type: string      
+      responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/DailyNotesResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /DayNotes/UpdateDayNotes:
+    x-swagger-router-controller: dayNotes
+    put:
+      tags:
+      - "DayNotes"
+      operationId: updateDayNotes      
+      parameters:
+        - in: body
+          name: body
+          description: provide day notes update
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateDayNotesBody"        
+      responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/DailyNotesResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  
+
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  DailyNotesResponse:
+    required:
+      - data
+      - error
+      - isSuccess
+    properties:
+      data:
+        type: object
+      error:
+        type: object
+      isSuccess:
+        type: boolean
+  ErrorResponse:
+    required:
+      - data
+      - error
+      - isSuccess
+    properties:
+      data:
+        type: object
+      error:
+        type: object
+      isSuccess:
+        type: boolean
+  createDayNotesBody:
+    required:
+    - "notes"
+    - "date"    
+    properties:
+      notes:
+        type: string
+      date:
+        type: string
+  UpdateDayNotesBody:
+    required:
+    - "code"    
+    properties:
+      code:
+        type: string
+      notes:
+        type: string
+      date:
+        type: string
